@@ -3,6 +3,7 @@
 ## What We're Building
 
 A RAG application with two interfaces:
+
 1. **Chat** (default view) - Threaded conversations with retrieval-augmented responses
 2. **Ingestion** - Upload files manually, track processing, manage documents
 
@@ -13,6 +14,7 @@ This is **not** an automated pipeline with connectors. Files are uploaded manual
 Technically-minded people who want to build production RAG systems using AI coding tools (Claude Code, Cursor, etc.). They don't need to know Python or React - that's the AI's job.
 
 **They need to understand:**
+
 - RAG concepts deeply (chunking, embeddings, retrieval, reranking)
 - Codebase structure (what sits where, how pieces connect)
 - How to direct AI to build what they need
@@ -21,6 +23,7 @@ Technically-minded people who want to build production RAG systems using AI codi
 ## Scope
 
 ### In Scope
+
 - ✅ Document ingestion and processing
 - ✅ Vector search with pgvector
 - ✅ Hybrid search (keyword + vector)
@@ -36,6 +39,7 @@ Technically-minded people who want to build production RAG systems using AI codi
 - ✅ Auth with RLS
 
 ### Out of Scope
+
 - ❌ Knowledge graphs / GraphRAG
 - ❌ Code execution / sandboxing
 - ❌ Image/audio/video processing
@@ -49,9 +53,9 @@ Technically-minded people who want to build production RAG systems using AI codi
 ## Stack
 
 | Layer | Choice |
-|-------|--------|
+| ------- | -------- |
 | Frontend | React + TypeScript + Vite + Tailwind + shadcn/ui |
-| Backend | Python + FastAPI |
+| Backend | Node.js + Hono + Bun |
 | Database | Supabase (Postgres + pgvector + Auth + Storage + Realtime) |
 | LLM (Module 1) | OpenAI Responses API (managed threads + file_search) |
 | LLM (Module 2+) | Any OpenAI-compatible endpoint (OpenRouter, Ollama, LM Studio, etc.) |
@@ -156,6 +160,7 @@ There is no right answer—this is a real architectural choice you'll face in bu
 ## Success Criteria
 
 By the end, students should have:
+
 - ✅ A working RAG application they built with AI assistance
 - ✅ Deep understanding of RAG concepts (chunking, embedding, retrieval, reranking)
 - ✅ Understanding of codebase structure - what lives where, how pieces connect
