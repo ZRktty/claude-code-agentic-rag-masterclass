@@ -18,10 +18,11 @@ export async function getAuthHeader(): Promise<Record<string, string>> {
 
 async function request(path: string, init: RequestInit = {}): Promise<Response> {
   const authHeader = await getAuthHeader();
+  const isFormData = init.body instanceof FormData;
   const res = await fetch(`${API_BASE_URL}${path}`, {
     ...init,
     headers: {
-      ...(init.body ? { "Content-Type": "application/json" } : {}),
+      ...(init.body && !isFormData ? { "Content-Type": "application/json" } : {}),
       ...authHeader,
       ...init.headers,
     },
@@ -44,4 +45,6 @@ export const api = {
   delete: async (path: string): Promise<void> => {
     await request(path, { method: "DELETE" });
   },
+  postForm: async <T>(path: string, formData: FormData): Promise<T> =>
+    (await request(path, { method: "POST", body: formData })).json(),
 };

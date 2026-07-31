@@ -76,7 +76,7 @@ export function ChatShell() {
                   {streamError}
                 </p>
               )}
-              <MessageInput disabled={streaming} onSend={handleSend} />
+              <MessageInput threadId={threadId!} disabled={streaming} onSend={handleSend} />
             </>
           ) : (
             <div className="flex flex-1 items-center justify-center">

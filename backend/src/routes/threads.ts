@@ -129,6 +129,99 @@ threadsRouter.delete("/:id", async (c) => {
   return c.body(null, 204);
 });
 
+threadsRouter.post("/:id/files", async (c) => {
+  const supabase = getUserClient(c.get("accessToken"));
+  const user = c.get("user");
+  const threadId = c.req.param("id");
+
+  const { data: thread, error: threadError } = await supabase
+    .from("threads")
+    .select()
+    .eq("id", threadId)
+    .maybeSingle();
+
+  if (threadError) {
+    return c.json({ error: threadError.message }, 500);
+  }
+  if (!thread) {
+    return c.json({ error: "Not found" }, 404);
+  }
+
+  const body = await c.req.parseBody();
+  const file = body.file;
+  if (!(file instanceof File)) {
+    return c.json({ error: "Missing file" }, 400);
+  }
+
+  let vectorStoreId = thread.openai_vector_store_id as string | null;
+  if (!vectorStoreId) {
+    const vectorStore = await openai.vectorStores.create({ name: `thread-${threadId}` });
+    vectorStoreId = vectorStore.id;
+    const { error: updateError } = await supabase
+      .from("threads")
+      .update({ openai_vector_store_id: vectorStoreId })
+      .eq("id", threadId);
+    if (updateError) {
+      return c.json({ error: updateError.message }, 500);
+    }
+  }
+
+  const vectorStoreFile = await openai.vectorStores.files.uploadAndPoll(vectorStoreId, file);
+  if (vectorStoreFile.status !== "completed") {
+    return c.json({ error: `File processing ${vectorStoreFile.status}` }, 502);
+  }
+
+  const { data: threadFile, error: insertError } = await supabase
+    .from("thread_files")
+    .insert({
+      thread_id: threadId,
+      user_id: user.id,
+      openai_file_id: vectorStoreFile.id,
+      filename: file.name,
+    })
+    .select()
+    .single();
+
+  if (insertError) {
+    return c.json({ error: insertError.message }, 500);
+  }
+
+  return c.json(
+    { fileId: threadFile.openai_file_id, vectorStoreId, filename: threadFile.filename },
+    201,
+  );
+});
+
+threadsRouter.get("/:id/files", async (c) => {
+  const supabase = getUserClient(c.get("accessToken"));
+  const threadId = c.req.param("id");
+
+  const { data: thread, error: threadError } = await supabase
+    .from("threads")
+    .select()
+    .eq("id", threadId)
+    .maybeSingle();
+
+  if (threadError) {
+    return c.json({ error: threadError.message }, 500);
+  }
+  if (!thread) {
+    return c.json({ error: "Not found" }, 404);
+  }
+
+  const { data, error } = await supabase
+    .from("thread_files")
+    .select()
+    .eq("thread_id", threadId)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    return c.json({ error: error.message }, 500);
+  }
+
+  return c.json(data);
+});
+
 const sendMessageSchema = z.object({
   content: z.string().trim().min(1),
 });
@@ -158,6 +251,13 @@ threadsRouter.post("/:id/messages", async (c) => {
     input: parsed.data.content,
     conversation: thread.openai_conversation_id,
     stream: true,
+    ...(thread.openai_vector_store_id
+      ? {
+          tools: [
+            { type: "file_search" as const, vector_store_ids: [thread.openai_vector_store_id] },
+          ],
+        }
+      : {}),
   });
 
   return streamSSE(c, async (stream) => {
