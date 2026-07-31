@@ -4,15 +4,14 @@ RAG app with chat (default) and document ingestion interfaces. Config via env va
 
 ## Stack
 - Frontend: React + Vite + Tailwind + shadcn/ui
-- Backend: Python + FastAPI
+- Backend: Node.js + Hono + Bun
 - Database: Supabase (Postgres, pgvector, Auth, Storage, Realtime)
 - LLM: OpenAI (Module 1), OpenRouter (Module 2+)
 - Observability: LangSmith
 
 ## Rules
-- Python backend must use a `venv` virtual environment
 - No LangChain, no LangGraph - raw SDK calls only
-- Use Pydantic for structured LLM outputs
+- Use Zod for structured LLM outputs and request/response validation
 - All tables need Row-Level Security - users only see their own data
 - Stream chat responses via SSE
 - Use Supabase Realtime for ingestion status updates

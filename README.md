@@ -24,7 +24,7 @@ A hands-on course where you collaborate with Claude Code to build a full-feature
 | Layer | Tech |
 |-------|------|
 | Frontend | React, TypeScript, Tailwind, shadcn/ui, Vite |
-| Backend | Python, FastAPI |
+| Backend | Node.js, Hono, Bun |
 | Database | Supabase (Postgres + pgvector + Auth + Storage) |
 | Doc Processing | Docling |
 | AI Models | Local (LM Studio) or Cloud (OpenAI, OpenRouter) |
