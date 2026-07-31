@@ -12,5 +12,5 @@ Track your progress through the masterclass. Update this file as you complete mo
 ### Module 1: App Shell + Observability
 - [x] 1. Repo scaffolding (`.agent/plans/1.repo-scaffolding.md`)
 - [x] 2. Supabase schema + auth (`.agent/plans/2.supabase-schema-auth.md`)
-- [ ] 3. Chat core (`.agent/plans/3.chat-core.md`)
+- [x] 3. Chat core (`.agent/plans/3.chat-core.md`)
 - [ ] 4. File attach + observability (`.agent/plans/4.file-attach-observability.md`)

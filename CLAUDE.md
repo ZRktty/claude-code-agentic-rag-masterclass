@@ -37,3 +37,11 @@ RAG app with chat (default) and document ingestion interfaces. Config via env va
 
 ## Progress
 Check PROGRESS.md for current module status. Update it as you complete tasks.
+
+## Browser testing (Playwright MCP)
+
+Use the `playwright` MCP server (project-scoped, `.mcp.json`) for browser testing — it runs as a local subprocess (`npx @playwright/mcp@latest`) and can reach `localhost:5173`/`localhost:3001` directly.
+
+Don't use the Docker-based `MCP_DOCKER` browser tools (`mcp__MCP_DOCKER__browser_*`) for this repo's dev servers — that browser runs inside an isolated Docker network and cannot reach the host's `localhost` (`ERR_CONNECTION_REFUSED` on both `localhost` and `host.docker.internal`).
+
+Test account for sign-in flows (dev Supabase project, "Confirm email" disabled): `test@test.com` / `/dashboard/project/vn`
