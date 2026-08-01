@@ -115,5 +115,9 @@ export function useChatStream(threadId: string | undefined) {
     return () => abortRef.current?.abort();
   }, []);
 
-  return { messages, loading, streaming, error, sendMessage };
+  const stopStreaming = useCallback(() => {
+    abortRef.current?.abort();
+  }, []);
+
+  return { messages, loading, streaming, error, sendMessage, stopStreaming };
 }

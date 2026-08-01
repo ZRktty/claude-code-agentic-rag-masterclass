@@ -1,3 +1,4 @@
+import { Send, Square } from "lucide-react";
 import { useState, type KeyboardEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,9 +9,10 @@ type MessageInputProps = {
   threadId: string;
   disabled: boolean;
   onSend: (content: string) => void;
+  onStop: () => void;
 };
 
-export function MessageInput({ threadId, disabled, onSend }: MessageInputProps) {
+export function MessageInput({ threadId, disabled, onSend, onStop }: MessageInputProps) {
   const [value, setValue] = useState("");
   const { files, uploading, upload } = useThreadFiles(threadId);
 
@@ -40,9 +42,17 @@ export function MessageInput({ threadId, disabled, onSend }: MessageInputProps) 
           disabled={disabled}
           className="min-h-10"
         />
-        <Button onClick={submit} disabled={disabled || !value.trim()}>
-          Send
-        </Button>
+        {disabled ? (
+          <Button onClick={onStop} variant="secondary" aria-label="Stop generating">
+            <Square className="fill-current" />
+            Stop
+          </Button>
+        ) : (
+          <Button onClick={submit} disabled={!value.trim()}>
+            <Send />
+            Send
+          </Button>
+        )}
       </div>
     </div>
   );

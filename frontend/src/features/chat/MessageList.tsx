@@ -1,3 +1,4 @@
+import { Bot, User } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import type { ChatMessage } from "./useChatStream";
@@ -35,8 +36,23 @@ export function MessageList({ messages, loading }: MessageListProps) {
       {messages.map((message) => (
         <div
           key={message.id}
-          className={cn("flex", message.role === "user" ? "justify-end" : "justify-start")}
+          className={cn(
+            "flex items-end gap-2",
+            message.role === "user" ? "flex-row-reverse justify-start" : "justify-start",
+          )}
         >
+          <div
+            className={cn(
+              "flex size-7 shrink-0 items-center justify-center rounded-full",
+              message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted",
+            )}
+          >
+            {message.role === "user" ? (
+              <User className="size-4" />
+            ) : (
+              <Bot className="size-4" />
+            )}
+          </div>
           <div
             className={cn(
               "max-w-[70%] rounded-xl px-3 py-2 text-sm whitespace-pre-wrap",

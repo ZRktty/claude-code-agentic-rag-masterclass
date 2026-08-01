@@ -1,4 +1,4 @@
-import { Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -25,6 +25,7 @@ export function ThreadSidebar({
     <aside className="flex h-full w-64 shrink-0 flex-col border-r">
       <div className="border-b p-3">
         <Button className="w-full" onClick={onCreate}>
+          <Plus />
           New thread
         </Button>
       </div>

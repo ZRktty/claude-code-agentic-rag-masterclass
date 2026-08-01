@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { streamSSE } from "hono/streaming";
 import { z } from "zod";
 import { getUserClient } from "../lib/supabase";
-import { openai, OPENAI_MODEL } from "../lib/openai";
+import { openai, OPENAI_MODEL, DEFAULT_VECTOR_STORE_ID } from "../lib/openai";
 import type { AppEnv } from "../types";
 
 function truncateTitle(content: string) {
@@ -246,17 +246,17 @@ threadsRouter.post("/:id/messages", async (c) => {
     return c.json({ error: "Not found" }, 404);
   }
 
+  const vectorStoreIds = [DEFAULT_VECTOR_STORE_ID, thread.openai_vector_store_id].filter(
+    (id): id is string => Boolean(id),
+  );
+
   const responseStream = await openai.responses.create({
     model: OPENAI_MODEL,
     input: parsed.data.content,
     conversation: thread.openai_conversation_id,
     stream: true,
-    ...(thread.openai_vector_store_id
-      ? {
-          tools: [
-            { type: "file_search" as const, vector_store_ids: [thread.openai_vector_store_id] },
-          ],
-        }
+    ...(vectorStoreIds.length > 0
+      ? { tools: [{ type: "file_search" as const, vector_store_ids: vectorStoreIds }] }
       : {}),
   });
 

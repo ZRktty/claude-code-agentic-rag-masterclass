@@ -25,6 +25,7 @@ export function ChatShell() {
     streaming,
     error: streamError,
     sendMessage,
+    stopStreaming,
   } = useChatStream(threadId);
 
   async function handleCreate() {
@@ -76,7 +77,12 @@ export function ChatShell() {
                   {streamError}
                 </p>
               )}
-              <MessageInput threadId={threadId!} disabled={streaming} onSend={handleSend} />
+              <MessageInput
+                threadId={threadId!}
+                disabled={streaming}
+                onSend={handleSend}
+                onStop={stopStreaming}
+              />
             </>
           ) : (
             <div className="flex flex-1 items-center justify-center">
